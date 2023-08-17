@@ -1,15 +1,13 @@
 import { Request, Response } from "express";
 import { IgApiClient } from "instagram-private-api";
 import { checkCookie } from "../utils/cookie";
-import getAllItemsFromFeed from "../utils/getAllItemsFromFeed";
-import { writeLocalFollowers } from "../utils/followers";
 import type { UserData } from "../types/userdata";
 
-export default async function saveFollowers(
+export default async function getBlocked(
   req: Request,
   res: Response
 ): Promise<Response> {
-  console.log("path: saveFollowers");
+  console.log("path: getBlocked");
 
   const ig = new IgApiClient();
 
@@ -29,12 +27,11 @@ export default async function saveFollowers(
   }
 
   try {
-    const followersFeed = ig.feed.accountFollowers(ig.state.cookieUserId);
-    const followers = await getAllItemsFromFeed(followersFeed);
+    const blocked = await ig.feed.blockedUsers().items();
 
-    await writeLocalFollowers(followers, username);
-
-    return res.status(200).send();
+    return res.status(200).json({
+      blocked,
+    });
   } catch (err) {
     console.log(err);
 

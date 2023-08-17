@@ -42,25 +42,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = __importDefault(require("fs"));
 function compareFollowers(updatedFollowers, username) {
     return __awaiter(this, void 0, void 0, function () {
-        var fileExist, localFollowers, followers, unfollowers;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var fileExist, localFollowers, _a, _b, unfollowers;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0: return [4 /*yield*/, fs_1.default.existsSync("./followers/".concat(username, ".json"))];
                 case 1:
-                    fileExist = _a.sent();
+                    fileExist = _c.sent();
                     if (!fileExist)
                         return [2 /*return*/];
+                    _b = (_a = JSON).parse;
                     return [4 /*yield*/, fs_1.default.readFileSync("./followers/".concat(username, ".json"), "utf-8")];
                 case 2:
-                    localFollowers = _a.sent();
-                    followers = JSON.parse(localFollowers).followers;
-                    unfollowers = followers.filter(function (item) { return !updatedFollowers.some(function (i) { return i.pk === item.pk; }); });
+                    localFollowers = _b.apply(_a, [_c.sent()]);
+                    console.log("localfollowers", localFollowers === null || localFollowers === void 0 ? void 0 : localFollowers.followers.length);
+                    unfollowers = localFollowers.followers.filter(function (item) { return !updatedFollowers.some(function (i) { return i.pk === item.pk; }); });
                     if (unfollowers.length > 0) {
                         console.log("Unfollowers: ".concat(unfollowers.length));
                         console.log(unfollowers.map(function (item) { return item.username; }).join(", "));
                     }
                     console.log("Total followers: ".concat(updatedFollowers.length));
-                    return [2 /*return*/];
+                    return [2 /*return*/, unfollowers];
             }
         });
     });

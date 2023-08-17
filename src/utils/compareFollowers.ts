@@ -5,20 +5,18 @@ import type { Local } from "../types/local";
 export default async function compareFollowers(
   updatedFollowers: AccountFollowersFeedResponseUsersItem[],
   username: string
-): Promise<void> {
+): Promise<void | AccountFollowersFeedResponseUsersItem[]> {
   const fileExist = await fs.existsSync(`./followers/${username}.json`);
+
   if (!fileExist) return;
 
-  const localFollowers = await fs.readFileSync(
-    `./followers/${username}.json`,
-    "utf-8"
-  );
+  const localFollowers = JSON.parse(
+    await fs.readFileSync(`./followers/${username}.json`, "utf-8")
+  ) as Local;
 
-  const followers: AccountFollowersFeedResponseUsersItem[] = (
-    JSON.parse(localFollowers) as Local
-  ).followers;
+  console.log("localfollowers", localFollowers?.followers.length);
 
-  const unfollowers = followers.filter(
+  const unfollowers = localFollowers.followers.filter(
     (item) => !updatedFollowers.some((i) => i.pk === item.pk)
   );
 
@@ -28,4 +26,6 @@ export default async function compareFollowers(
   }
 
   console.log(`Total followers: ${updatedFollowers.length}`);
+
+  return unfollowers;
 }

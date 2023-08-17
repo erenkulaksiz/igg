@@ -39,88 +39,54 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkCookie = exports.removeCookie = exports.getCookie = exports.saveCookie = void 0;
-var fs_1 = __importDefault(require("fs"));
-function saveCookie(cookie, username) {
+var instagram_private_api_1 = require("instagram-private-api");
+var cookie_1 = require("../utils/cookie");
+var compareFollowers_1 = __importDefault(require("../utils/compareFollowers"));
+// await compareFollowers(followers, credentials.username);
+function getUnfollowers(req, res) {
     return __awaiter(this, void 0, void 0, function () {
+        var ig, username, shouldLogin, followers, unfollowers, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fs_1.default.writeFileSync("./cookies/".concat(username, ".json"), JSON.stringify({ content: cookie }))];
+                case 0:
+                    console.log("path: getUnfollowers");
+                    ig = new instagram_private_api_1.IgApiClient();
+                    username = req.body.username;
+                    ig.state.generateDevice(username);
+                    ig.state.proxyUrl = process.env.IG_PROXY || "";
+                    return [4 /*yield*/, (0, cookie_1.checkCookie)(ig, username)];
                 case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.saveCookie = saveCookie;
-function getCookie(username) {
-    return __awaiter(this, void 0, void 0, function () {
-        var exist, cookie;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fs_1.default.existsSync("./cookies/".concat(username, ".json"))];
-                case 1:
-                    exist = _a.sent();
-                    if (!exist) {
-                        return [2 /*return*/];
+                    shouldLogin = (_a.sent()).shouldLogin;
+                    if (shouldLogin) {
+                        return [2 /*return*/, res.status(401).json({
+                                error: "auth-required",
+                            })];
                     }
-                    return [4 /*yield*/, fs_1.default.readFileSync("./cookies/".concat(username, ".json"))];
+                    _a.label = 2;
                 case 2:
-                    cookie = _a.sent();
-                    return [2 /*return*/, JSON.parse(cookie.toString()).content];
-            }
-        });
-    });
-}
-exports.getCookie = getCookie;
-function removeCookie(username) {
-    return __awaiter(this, void 0, void 0, function () {
-        var exist;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fs_1.default.existsSync("./cookies/".concat(username, ".json"))];
-                case 1:
-                    exist = _a.sent();
-                    if (!exist) {
-                        return [2 /*return*/];
-                    }
-                    return [4 /*yield*/, fs_1.default.unlinkSync("./cookies/".concat(username, ".json"))];
-                case 2:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.removeCookie = removeCookie;
-function checkCookie(ig, username) {
-    return __awaiter(this, void 0, void 0, function () {
-        var cookie, loggedInUser, err_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getCookie(username ? username : process.env.IG_USERNAME || "")];
-                case 1:
-                    cookie = _a.sent();
-                    if (!cookie) return [3 /*break*/, 7];
-                    return [4 /*yield*/, ig.state.deserialize(cookie)];
-                case 2:
-                    _a.sent();
-                    _a.label = 3;
+                    _a.trys.push([2, 5, , 6]);
+                    return [4 /*yield*/, ig.feed
+                            .accountFollowers(ig.state.cookieUserId)
+                            .items()];
                 case 3:
-                    _a.trys.push([3, 5, , 6]);
-                    return [4 /*yield*/, ig.account.currentUser()];
+                    followers = _a.sent();
+                    return [4 /*yield*/, (0, compareFollowers_1.default)(followers, username)];
                 case 4:
-                    loggedInUser = _a.sent();
-                    return [3 /*break*/, 6];
+                    unfollowers = _a.sent();
+                    if (!unfollowers)
+                        return [2 /*return*/, res.status(200).json()];
+                    return [2 /*return*/, res.status(200).json({
+                            unfollowers: unfollowers.map(function (item) { return item.username; }),
+                        })];
                 case 5:
                     err_1 = _a.sent();
                     console.log(err_1);
-                    return [2 /*return*/, { shouldLogin: true }];
-                case 6: return [2 /*return*/, { shouldLogin: false }];
-                case 7: return [2 /*return*/, { shouldLogin: true }];
+                    return [2 /*return*/, res.status(401).json({
+                            error: "error-occurred",
+                        })];
+                case 6: return [2 /*return*/];
             }
         });
     });
 }
-exports.checkCookie = checkCookie;
+exports.default = getUnfollowers;

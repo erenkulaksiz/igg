@@ -3,7 +3,10 @@ import { IgApiClient } from "instagram-private-api";
 import { checkCookie } from "../utils/cookie";
 import type { UserData } from "../types/userdata";
 
-export default async function getSelfProfile(req: Request, res: Response) {
+export default async function getSelfProfile(
+  req: Request,
+  res: Response
+): Promise<Response> {
   console.log("path: getSelfProfile");
   const ig = new IgApiClient();
 
@@ -18,13 +21,21 @@ export default async function getSelfProfile(req: Request, res: Response) {
 
   if (shouldLogin) {
     return res.status(401).json({
-      error: "login pls",
+      error: "auth-required",
     });
   }
 
-  const user = await ig.user.info(ig.state.cookieUserId);
+  try {
+    const user = await ig.user.info(ig.state.cookieUserId);
 
-  return res.status(200).json({
-    user,
-  });
+    return res.status(200).json({
+      user,
+    });
+  } catch (err) {
+    console.log(err);
+
+    return res.status(401).json({
+      error: "error-occurred",
+    });
+  }
 }

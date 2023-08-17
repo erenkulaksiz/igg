@@ -1,1 +1,1 @@
-{"version":3,"file":"getSelfProfile.d.ts","sourceRoot":"","sources":["../../src/routes/getSelfProfile.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAK5C,wBAA8B,cAAc,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,+CAwBvE"}
+{"version":3,"file":"getSelfProfile.d.ts","sourceRoot":"","sources":["../../src/routes/getSelfProfile.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAK5C,wBAA8B,cAAc,CAC1C,GAAG,EAAE,OAAO,EACZ,GAAG,EAAE,QAAQ,GACZ,OAAO,CAAC,QAAQ,CAAC,CAgCnB"}

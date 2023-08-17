@@ -1,1 +1,1 @@
-{"version":3,"file":"saveFollowers.d.ts","sourceRoot":"","sources":["../../src/routes/saveFollowers.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAO5C,wBAA8B,aAAa,CAAC,GAAG,EAAE,OAAO,EAAE,GAAG,EAAE,QAAQ,2DA0BtE"}
+{"version":3,"file":"saveFollowers.d.ts","sourceRoot":"","sources":["../../src/routes/saveFollowers.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAO5C,wBAA8B,aAAa,CACzC,GAAG,EAAE,OAAO,EACZ,GAAG,EAAE,QAAQ,GACZ,OAAO,CAAC,QAAQ,CAAC,CAkCnB"}

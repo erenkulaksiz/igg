@@ -38,13 +38,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var instagram_private_api_1 = require("instagram-private-api");
 var cookie_1 = require("../utils/cookie");
-function getSelfProfile(req, res) {
+function setBlocked(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var ig, username, shouldLogin, user, err_1;
+        var ig, username, shouldLogin, userId, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    console.log("path: getSelfProfile");
+                    console.log("path: setBlocked");
                     ig = new instagram_private_api_1.IgApiClient();
                     username = req.body.username;
                     ig.state.generateDevice(username);
@@ -59,22 +59,23 @@ function getSelfProfile(req, res) {
                     }
                     _a.label = 2;
                 case 2:
-                    _a.trys.push([2, 4, , 5]);
-                    return [4 /*yield*/, ig.user.info(ig.state.cookieUserId)];
+                    _a.trys.push([2, 5, , 6]);
+                    return [4 /*yield*/, ig.user.getIdByUsername(username)];
                 case 3:
-                    user = _a.sent();
-                    return [2 /*return*/, res.status(200).json({
-                            user: user,
-                        })];
+                    userId = _a.sent();
+                    return [4 /*yield*/, ig.friendship.block(userId)];
                 case 4:
+                    _a.sent();
+                    return [2 /*return*/, res.status(200).json()];
+                case 5:
                     err_1 = _a.sent();
                     console.log(err_1);
                     return [2 /*return*/, res.status(401).json({
                             error: "error-occurred",
                         })];
-                case 5: return [2 /*return*/];
+                case 6: return [2 /*return*/];
             }
         });
     });
 }
-exports.default = getSelfProfile;
+exports.default = setBlocked;

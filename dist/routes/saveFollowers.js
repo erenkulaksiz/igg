@@ -45,7 +45,7 @@ var getAllItemsFromFeed_1 = __importDefault(require("../utils/getAllItemsFromFee
 var followers_1 = require("../utils/followers");
 function saveFollowers(req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var ig, username, shouldLogin, followersFeed, followers;
+        var ig, username, shouldLogin, followersFeed, followers, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -59,18 +59,27 @@ function saveFollowers(req, res) {
                     shouldLogin = (_a.sent()).shouldLogin;
                     if (shouldLogin) {
                         return [2 /*return*/, res.status(401).json({
-                                error: "login pls",
+                                error: "auth-required",
                             })];
                     }
+                    _a.label = 2;
+                case 2:
+                    _a.trys.push([2, 5, , 6]);
                     followersFeed = ig.feed.accountFollowers(ig.state.cookieUserId);
                     return [4 /*yield*/, (0, getAllItemsFromFeed_1.default)(followersFeed)];
-                case 2:
+                case 3:
                     followers = _a.sent();
                     return [4 /*yield*/, (0, followers_1.writeLocalFollowers)(followers, username)];
-                case 3:
+                case 4:
                     _a.sent();
-                    res.status(200).send();
-                    return [2 /*return*/];
+                    return [2 /*return*/, res.status(200).send()];
+                case 5:
+                    err_1 = _a.sent();
+                    console.log(err_1);
+                    return [2 /*return*/, res.status(401).json({
+                            error: "error-occurred",
+                        })];
+                case 6: return [2 /*return*/];
             }
         });
     });

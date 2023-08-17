@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
-import routes from "./constants/routes";
+import routes from "./routes";
 
 const app = express();
 
@@ -23,6 +23,11 @@ app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
 
-app.post(routes.API_LOGIN.route, routes.API_LOGIN.action);
-app.post(routes.API_GETSELFPROFILE.route, routes.API_GETSELFPROFILE.action);
-app.post(routes.API_SAVEFOLLOWERS.route, routes.API_SAVEFOLLOWERS.action);
+function registerRoutes() {
+  Object.values(routes).forEach((route) => {
+    app.post(route.route, route.action);
+  });
+  console.log("Registered routes");
+}
+
+registerRoutes();

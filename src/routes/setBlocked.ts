@@ -1,20 +1,19 @@
 import { Request, Response } from "express";
 import { IgApiClient } from "instagram-private-api";
 import { checkCookie } from "../utils/cookie";
-import getAllItemsFromFeed from "../utils/getAllItemsFromFeed";
-import { writeLocalFollowers } from "../utils/followers";
 import type { UserData } from "../types/userdata";
 
-export default async function saveFollowers(
+export default async function setBlocked(
   req: Request,
   res: Response
 ): Promise<Response> {
-  console.log("path: saveFollowers");
+  console.log("path: setBlocked");
 
   const ig = new IgApiClient();
 
   const { username } = req.body as {
     username: UserData["username"];
+    block: UserData["username"];
   };
 
   ig.state.generateDevice(username);
@@ -29,12 +28,10 @@ export default async function saveFollowers(
   }
 
   try {
-    const followersFeed = ig.feed.accountFollowers(ig.state.cookieUserId);
-    const followers = await getAllItemsFromFeed(followersFeed);
+    const userId = await ig.user.getIdByUsername(username);
+    await ig.friendship.block(userId);
 
-    await writeLocalFollowers(followers, username);
-
-    return res.status(200).send();
+    return res.status(200).json();
   } catch (err) {
     console.log(err);
 

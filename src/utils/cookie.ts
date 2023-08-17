@@ -17,6 +17,14 @@ export async function getCookie(username: string): Promise<void | string> {
   return JSON.parse(cookie.toString()).content;
 }
 
+export async function removeCookie(username: string): Promise<void> {
+  const exist = await fs.existsSync(`./cookies/${username}.json`);
+  if (!exist) {
+    return;
+  }
+  await fs.unlinkSync(`./cookies/${username}.json`);
+}
+
 export async function checkCookie(
   ig: IgApiClient,
   username?: string
@@ -27,6 +35,12 @@ export async function checkCookie(
 
   if (cookie) {
     await ig.state.deserialize(cookie);
+    try {
+      const loggedInUser = await ig.account.currentUser();
+    } catch (err) {
+      console.log(err);
+      return { shouldLogin: true };
+    }
     return { shouldLogin: false };
   }
 
