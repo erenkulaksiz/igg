@@ -1,0 +1,1 @@
+{"version":3,"file":"followers.d.ts","sourceRoot":"","sources":["../../src/utils/followers.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,qCAAqC,EAAE,MAAM,uBAAuB,CAAC;AAGnF,wBAAsB,mBAAmB,CACvC,SAAS,EAAE,qCAAqC,EAAE,EAClD,QAAQ,EAAE,MAAM,GACf,OAAO,CAAC,IAAI,CAAC,CAMf;AAED,wBAAsB,iBAAiB,CACrC,QAAQ,EAAE,MAAM,GACf,OAAO,CAAC,qCAAqC,EAAE,GAAG,IAAI,CAAC,CAIzD"}

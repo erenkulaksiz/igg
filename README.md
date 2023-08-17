@@ -8,11 +8,8 @@ Instagram API server
 npm install igg
 ```
 
-## Config
-
-Create .env file on root and enter contents:
+## Start
 
 ```bash
-IG_USERNAME=your_username
-IG_PASSWORD=your_password
+npm run bs
 ```

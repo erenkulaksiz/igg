@@ -1,45 +1,28 @@
 import "dotenv/config";
-import { IgApiClient } from "instagram-private-api";
-import { sample } from "lodash";
-import connect from "./connect";
-import { cookie, saveCookie } from "./cookie";
-import type { UserData } from "./types/userdata";
+import express from "express";
+import bodyParser from "body-parser";
+import routes from "./constants/routes";
 
-const credentials = {
-  username: process.env.IG_USERNAME || "",
-  password: process.env.IG_PASSWORD || "",
-} as UserData;
+const app = express();
 
-const ig = new IgApiClient();
-ig.state.generateDevice(credentials.username);
-ig.state.proxyUrl = process.env.IG_PROXY || "";
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-(async () => {
-  ig.request.end$.subscribe(async () => {
-    const serialized = await ig.state.serialize();
-    delete serialized.constants;
-    saveCookie(serialized);
-  });
+app.use(
+  express.json({
+    type: ["application/json", "text/plain"],
+  })
+);
 
-  await cookie(ig);
+const port = process.env.PORT || 3000;
 
-  const loggedInUser = await connect(ig, credentials);
+app.listen(port, function () {
+  console.log(`Listening on port ${port}`);
+});
 
-  //process.nextTick(async () => await ig.simulate.postLoginFlow());
-
-  const userFeed = ig.feed.user(loggedInUser.pk);
-  const myPostsFirstPage = await userFeed.items();
-  const myPostsSecondPage = await userFeed.items();
-
-  console.log(myPostsFirstPage[0]);
-
-  await ig.media.like({
-    mediaId: sample([myPostsFirstPage[0].id, myPostsSecondPage[0].id]) || "",
-    moduleInfo: {
-      module_name: "profile",
-      user_id: loggedInUser.pk,
-      username: loggedInUser.username,
-    },
-    d: sample([0, 1]) ? 1 : 0,
-  });
-})();
+app.post(routes.API_LOGIN.route, routes.API_LOGIN.action);
+app.post(routes.API_GETSELFPROFILE.route, routes.API_GETSELFPROFILE.action);
+app.post(routes.API_SAVEFOLLOWERS.route, routes.API_SAVEFOLLOWERS.action);

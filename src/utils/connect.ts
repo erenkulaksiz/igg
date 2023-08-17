@@ -5,7 +5,7 @@ import {
   AccountRepositoryLoginResponseLogged_in_user,
 } from "instagram-private-api";
 import { input } from "@inquirer/prompts";
-import type { UserData } from "./types/userdata";
+import type { UserData } from "../types/userdata";
 
 export default async function connect(
   ig: IgApiClient,
@@ -19,7 +19,7 @@ export default async function connect(
       err: IgLoginTwoFactorRequiredError | IgLoginBadPasswordError
     ) {
       if (err instanceof IgLoginBadPasswordError) {
-        throw new Error("Bad password");
+        throw new Error("bad-pwd");
       }
 
       const { username, totp_two_factor_on, two_factor_identifier } =
